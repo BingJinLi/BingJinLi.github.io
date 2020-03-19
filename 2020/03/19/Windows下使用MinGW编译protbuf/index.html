@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>Windows下使用MinGW编译protbuf | BingJinLi's 部落阁</title><meta name="description" content="Windows下使用MinGW编译protbuf"><meta name="keywords" content="Windows,MinGW,protobuf"><meta name="author" content="BingJin.Li"><meta name="copyright" content="BingJin.Li"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Windows下使用MinGW编译protbuf"><meta name="twitter:description" content="Windows下使用MinGW编译protbuf"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta property="og:type" content="article"><meta property="og:title" content="Windows下使用MinGW编译protbuf"><meta property="og:url" content="http://bingjinli.github.io/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/"><meta property="og:site_name" content="BingJinLi's 部落阁"><meta property="og:description" content="Windows下使用MinGW编译protbuf"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://bingjinli.github.io/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/"><link rel="next" title="新的开始" href="http://bingjinli.github.io/2020/03/18/%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">BingJinLi's 部落阁</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">2</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">4</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">目录</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#背景"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">背景</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#工具与材料"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">工具与材料</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#工具的安装及配置"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">工具的安装及配置</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Qt的安装"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">Qt的安装</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#CMake的安装"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">CMake的安装</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#msys的安装"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">msys的安装</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#编译"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">编译</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#结束语"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">结束语</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具与材料"><span class="toc-number">2.</span> <span class="toc-text">工具与材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具的安装及配置"><span class="toc-number">3.</span> <span class="toc-text">工具的安装及配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Qt的安装"><span class="toc-number">3.1.</span> <span class="toc-text">Qt的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMake的安装"><span class="toc-number">3.2.</span> <span class="toc-text">CMake的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#msys的安装"><span class="toc-number">3.3.</span> <span class="toc-text">msys的安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-number">4.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结束语"><span class="toc-number">5.</span> <span class="toc-text">结束语</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png)"><div id="post-info"><div id="post-title"><div class="posttitle">Windows下使用MinGW编译protbuf</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 发表于 2020-03-19<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> 更新于 2020-03-19</time><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>阅读量:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>俗话说“谷歌出品，必属精品”，想必大家都知道谷歌的protobuf。protobuf 是基础的数据格式，和 JSON、XML 非常的相似，都是用于存储结构化的数据，都支持很多不同的语言使用并进行序列化和反序列化。</p>
+<p>由于平时项目中也有用到protobuf，但一般都在windows下用VisualStudio编译使用，这次想做一个编译版本，使之能支持项目跨平台，既然提到跨平台了，作为一个C++在线脱发程序员，霸王洗发液忠实粉丝，自然而然就想到Qt了（什么？我都想到Qt了你还在问我有没有头发？），用Qt做跨平台项目那编译器自然是选择MinGW了。尽管路线明确，可是在实际的编译静态链接库的过程还是错误百出……</p>
+<p>如果你跟我一样，想在Windows上使用Qt的MinGW编译protobuf的静态库，那就继续往下看吧，你要踩的坑我已经踩过了！</p>
+<h2 id="工具与材料"><a href="#工具与材料" class="headerlink" title="工具与材料"></a>工具与材料</h2><ul>
+<li><a href="https://github.com/protocolbuffers/protobuf/tags" target="_blank" rel="noopener">protobuf源码</a>(选一个心仪的版本下载)</li>
+<li><a href="http://download.qt.io/archive/qt/" target="_blank" rel="noopener">Qt5</a>及以上（据我所知最后一个支持xp的Qt版本是5.5.1，面向xp编程的盆友可以注意一下）</li>
+<li><a href="https://cmake.org/download/" target="_blank" rel="noopener">CMake</a>(如果下载的protobuf源码包解压后在protobuf-x.x.x目录中有cmake目录则安装此项，如果没有cmake目录，则跳过此项直接安装下面的msys)</li>
+<li><a href="http://sourceforge.net/projects/mingwbuilds/files/external-binary-packages/" target="_blank" rel="noopener">msys</a>（下载msys+7za+wget+svn+git+mercurial+cvs-rev13.7z这种名称的压缩包）</li>
+</ul>
+<h2 id="工具的安装及配置"><a href="#工具的安装及配置" class="headerlink" title="工具的安装及配置"></a>工具的安装及配置</h2><h3 id="Qt的安装"><a href="#Qt的安装" class="headerlink" title="Qt的安装"></a>Qt的安装</h3><p>Windows平台下注意安装Qt时要勾选Qt/Qt5.x.x/MinGWx.x.x 32(64)bit和Tools/MinGW 5.x.x</p>
+<p>安装完后要配置环境变量</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#比如我的（以下环境变量，无则创建，有则追加）</span><br><span class="line">C_INCLUDE_PATH  D:&#x2F;Qt&#x2F;Qt5.12.7&#x2F;Tools&#x2F;mingw730_64&#x2F;include</span><br><span class="line">LIBRARY_PATH    D:&#x2F;Qt&#x2F;Qt5.12.7&#x2F;Tools&#x2F;mingw730_64&#x2F;lib</span><br><span class="line">PATH            D:&#x2F;Qt&#x2F;Qt5.12.7&#x2F;Tools&#x2F;mingw730_64&#x2F;bin</span><br></pre></td></tr></table></figure></div>
+
+<p>配置完成后可以打开cmd敲以下gcc -v命令，看看有没有输出版本信息，有输出就证明配置正确了</p>
+<h3 id="CMake的安装"><a href="#CMake的安装" class="headerlink" title="CMake的安装"></a>CMake的安装</h3><p>下载合适的安装包安装即可</p>
+<h3 id="msys的安装"><a href="#msys的安装" class="headerlink" title="msys的安装"></a>msys的安装</h3><p>将下载的压缩包解压到解压到MinGW目录下，比如我将解压出的msys目录放到了D:/Qt/Qt5.12.7/Tools/mingw730_64目录下</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>编译分两种，是protobuf情况而定，这也是选择性的安装msys和CMake的原因，如果下载的protobuf源码包解压后在protobuf-x.x.x目录中有cmake目录则用CMake，如果没有cmake目录，则用msys。</p>
+<ul>
+<li><p>CMake方式</p>
+<ul>
+<li>任意一处创建一个目录作为编译后生成文件的存放目录（比如我的叫protobufbuild）</li>
+<li>打开安装好的CMake选择相应的目录和选项进行如图操作</li>
+</ul>
+<p><a href="/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/cmake.gif" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/cmake.gif" class="lazyload"></a></p>
+<ul>
+<li>打开protobufbuild目录执行mingw32-make.exe命令并回车即可开始编译，编译后的文件都在该目录下</li>
+</ul>
+<p><a href="/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/make.png" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/make.png" class="lazyload"></a></p>
+</li>
+<li><p>msys方式 </p>
+<p>进入msys目录，打开双击运行msys.bat</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">shell</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix 目标生成目录绝对路径</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>在目标目录即可看到生成的静态库和相应程序</p>
+<p>libprotobuf.a</p>
+<p>libprotobuf-lite.a</p>
+<p>protoc.exe</p>
+</li>
+</ul>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>protobuf的具体使用方法就不说了，使用时注意引入库文件就好了和静态库就好了</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BingJin.Li</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://bingjinli.github.io/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/">http://bingjinli.github.io/2020/03/19/Windows%E4%B8%8B%E4%BD%BF%E7%94%A8MinGW%E7%BC%96%E8%AF%91protbuf/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://bingjinli.github.io">BingJinLi's 部落阁</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Windows/">Windows    </a><a class="post-meta__tags" href="/tags/MinGW/">MinGW    </a><a class="post-meta__tags" href="/tags/protobuf/">protobuf    </a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付宝"><div class="post-qr-code__desc">支付宝</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2020/03/18/%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/default.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">下一篇</div><div class="next_info"><span>新的开始</span></div></a></div></nav></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By BingJin.Li</div><div class="framework-info"><span>驱动 </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
