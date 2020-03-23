@@ -49,7 +49,7 @@ PATH            D:/Qt/Qt5.12.7/Tools/mingw730_64/bin
 
 ## 编译
 
-编译分两种，是protobuf情况而定，这也是选择性的安装msys和CMake的原因，如果下载的protobuf源码包解压后在protobuf-x.x.x目录中有cmake目录则用CMake，如果没有cmake目录，则用msys。
+编译分两种，视protobuf情况而定，这也是选择性的安装msys和CMake的原因，如果下载的protobuf源码包解压后在protobuf-x.x.x目录中有cmake目录则用CMake，如果没有cmake目录，则用msys。
 
 - CMake方式
 
@@ -58,9 +58,11 @@ PATH            D:/Qt/Qt5.12.7/Tools/mingw730_64/bin
 
   ![](Windows下使用MinGW编译protbuf/cmake.gif)
 
-  - 打开protobufbuild目录执行mingw32-make.exe命令并回车即可开始编译，编译后的文件都在该目录下
+  - 打开protobufbuild目录执行`mingw32-make.exe`命令并回车即可开始编译，编译后的文件都在该目录下
 
   ![](Windows下使用MinGW编译protbuf/make.png)
+
+  此过程结束后可以进行`mingw32-make.exe install`这样会把生成的静态库和可执行文件还有引入protobuf所需要的头文件拷贝到`C:\Program Files (x86)\protobuf`
 
 - msys方式 
 
@@ -84,5 +86,5 @@ PATH            D:/Qt/Qt5.12.7/Tools/mingw730_64/bin
 
 ## 结束语
 
-protobuf的具体使用方法就不说了，使用时注意引入库文件就好了和静态库就好了
+protobuf的具体使用方法就不说了，使用时注意引入库文件和静态库就好了
 
